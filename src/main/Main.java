@@ -3,16 +3,14 @@ package main;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import main.controller.ImageViewController;
+import main.component.Root;
 
 public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		ImageViewController.init();
-		Parent root = new AnchorPane(ImageViewController.getView());
+		Parent root = new Root().parentView();
 
 		primaryStage.setTitle("Procedural Texture Generator");
 		primaryStage.setScene(new Scene(root, 800, 600));
