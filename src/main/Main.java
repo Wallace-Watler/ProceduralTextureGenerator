@@ -10,7 +10,7 @@ public class Main extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		Parent root = new Root().parentView();
+		Parent root = new Root(primaryStage).parentView();
 
 		primaryStage.setTitle("Procedural Texture Generator");
 		primaryStage.setScene(new Scene(root, 800, 600));

@@ -1,5 +1,6 @@
 package main.component;
 
+import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
@@ -8,12 +9,13 @@ import java.util.Map;
 
 public class Workspace implements ReactiveComponentParent {
 
-	private ReactiveComponent parent;
+	private final ReactiveComponentParent parent;
 
 	@FXML
 	private StackPane stackPane;
 
-	public Workspace(ReactiveComponent parent) {
+	public Workspace(ReactiveComponentParent parent) {
+		//----Init Model----//
 		this.parent = parent;
 
 		//----Init View----//
@@ -26,7 +28,7 @@ public class Workspace implements ReactiveComponentParent {
 	}
 
 	@Override
-	public Map<String, Object> state() {
+	public Map<String, Property> state() {
 		return parent.state();
 	}
 }

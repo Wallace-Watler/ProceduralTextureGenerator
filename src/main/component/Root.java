@@ -1,32 +1,38 @@
 package main.component;
 
+import javafx.beans.property.Property;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import main.component.texture.NewTextureRoot;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Root implements ReactiveComponentParent {
 
-	private boolean workingWithTexture;
-	private boolean workingWithAnimation;
-	private boolean workingWithTileableX;
-	private boolean workingWithTileableY;
-	private boolean workingWithPeriodic;
+	private SimpleBooleanProperty workingWithTexture;
+	private SimpleBooleanProperty workingWithAnimation;
+	private SimpleBooleanProperty workingWithTileableX;
+	private SimpleBooleanProperty workingWithTileableY;
+	private SimpleBooleanProperty workingWithPeriodic;
 
 	@FXML
 	private BorderPane root;
 
-	public Root() {
-		workingWithTexture = false;
-		workingWithAnimation = false;
-		workingWithTileableX = false;
-		workingWithTileableY = false;
-		workingWithPeriodic = false;
-
+	public Root(Stage stage) {
 		//----Init Model----//
+		workingWithTexture = new SimpleBooleanProperty(false);
+		workingWithAnimation = new SimpleBooleanProperty(false);
+		workingWithTileableX = new SimpleBooleanProperty(false);
+		workingWithTileableY = new SimpleBooleanProperty(false);
+		workingWithPeriodic = new SimpleBooleanProperty(false);
+
 		PTGNodeLibrary ptgNodeLibrary = new PTGNodeLibrary(this);
 		Workspace workspace = new Workspace(this);
 		Preview preview = new Preview(this);
@@ -64,6 +70,21 @@ public class Root implements ReactiveComponentParent {
 		root = new BorderPane(workspacePane, new MenuBar(fileMenu), previewPane, inspectorPane, ptgNodeLibraryPane);
 
 		//----Init Controller----//
+		newTexture.setOnAction(event -> {
+			Stage newTextureWindow = new Stage();
+			newTextureWindow.setTitle("New Texture");
+			newTextureWindow.setScene(new Scene(new NewTextureRoot(this, newTextureWindow).parentView(), 300, 160));
+			newTextureWindow.setResizable(false);
+			newTextureWindow.initOwner(stage);
+			newTextureWindow.initModality(Modality.APPLICATION_MODAL);
+			newTextureWindow.showAndWait();
+		});
+
+		newAnimation.setOnAction(event -> {
+			//TODO
+			System.out.println("TODO");
+		});
+
 		exit.setOnAction(event -> System.exit(0));
 	}
 
@@ -73,8 +94,8 @@ public class Root implements ReactiveComponentParent {
 	}
 
 	@Override
-	public Map<String, Object> state() {
-		final Map<String, Object> state = new HashMap<>();
+	public Map<String, Property> state() {
+		final Map<String, Property> state = new HashMap<>();
 		state.put("workingWithTexture", workingWithTexture);
 		state.put("workingWithAnimation", workingWithAnimation);
 		state.put("workingWithTileableX", workingWithTileableX);

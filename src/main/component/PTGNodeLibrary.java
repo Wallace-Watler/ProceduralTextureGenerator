@@ -1,5 +1,6 @@
 package main.component;
 
+import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Accordion;
@@ -8,12 +9,13 @@ import java.util.Map;
 
 public class PTGNodeLibrary implements ReactiveComponentParent {
 
-	private ReactiveComponent parent;
+	private final ReactiveComponentParent parent;
 
 	@FXML
-	private Accordion accordion;
+	private final Accordion accordion;
 
-	public PTGNodeLibrary(ReactiveComponent parent) {
+	public PTGNodeLibrary(ReactiveComponentParent parent) {
+		//----Init Model----//
 		this.parent = parent;
 
 		//----Init View----//
@@ -26,7 +28,7 @@ public class PTGNodeLibrary implements ReactiveComponentParent {
 	}
 
 	@Override
-	public Map<String, Object> state() {
+	public Map<String, Property> state() {
 		return parent.state();
 	}
 }
