@@ -1,9 +1,10 @@
-package main.component;
+package main.component.preview;
 
 import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
+import main.component.ReactiveComponentParent;
 
 import java.util.Map;
 

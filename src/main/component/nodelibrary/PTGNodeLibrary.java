@@ -1,30 +1,31 @@
-package main.component;
+package main.component.nodelibrary;
 
 import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.Accordion;
+import main.component.ReactiveComponentParent;
 
 import java.util.Map;
 
-public class Workspace implements ReactiveComponentParent {
+public class PTGNodeLibrary implements ReactiveComponentParent {
 
 	private final ReactiveComponentParent parent;
 
 	@FXML
-	private StackPane stackPane;
+	private final Accordion accordion;
 
-	public Workspace(ReactiveComponentParent parent) {
+	public PTGNodeLibrary(ReactiveComponentParent parent) {
 		//----Init Model----//
 		this.parent = parent;
 
 		//----Init View----//
-		stackPane = new StackPane();
+		accordion = new Accordion();
 	}
 
 	@Override
 	public Parent parentView() {
-		return stackPane;
+		return accordion;
 	}
 
 	@Override

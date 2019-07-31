@@ -1,6 +1,8 @@
-package main.component.texture;
+package main.component;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
@@ -8,7 +10,6 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import main.component.ReactiveComponentParent;
 
 import java.util.Map;
 
@@ -23,6 +24,9 @@ public class NewTextureRoot implements ReactiveComponentParent {
 		//----Init Model----//
 		this.parent = parent;
 		final Map<String, Property> parentState = parent.state();
+		assert parentState.get("projectType").getValue() instanceof ProjectType;
+		assert parentState.get("imageWidth") instanceof IntegerProperty;
+		assert parentState.get("imageHeight") instanceof IntegerProperty;
 		assert parentState.get("workingWithTileableX") instanceof BooleanProperty;
 		assert parentState.get("workingWithTileableY") instanceof BooleanProperty;
 
@@ -64,6 +68,7 @@ public class NewTextureRoot implements ReactiveComponentParent {
 		root.setPadding(new Insets(0, 10, 0, 10));
 
 		//----Init Controller----//
+		// TODO: Limit text input length
 		widthInput.textProperty().addListener((observable, oldValue, newValue) -> {
 			if(!newValue.matches("\\d*")) widthInput.setText(newValue.replaceAll("[^\\d]", ""));
 		});
@@ -73,9 +78,11 @@ public class NewTextureRoot implements ReactiveComponentParent {
 		});
 
 		ok.setOnAction(event -> {
+			((ObjectProperty<ProjectType>) parentState.get("projectType")).set(ProjectType.TEXTURE);
+			((IntegerProperty) parentState.get("imageWidth")).set(Integer.parseInt(widthInput.getText()));
+			((IntegerProperty) parentState.get("imageHeight")).set(Integer.parseInt(heightInput.getText()));
 			((BooleanProperty) parentState.get("workingWithTileableX")).set(wrapX.isSelected());
 			((BooleanProperty) parentState.get("workingWithTileableY")).set(wrapY.isSelected());
-			//TODO: Somehow trigger parent to update (probably should wrap state into a separate class)
 			stage.close();
 		});
 

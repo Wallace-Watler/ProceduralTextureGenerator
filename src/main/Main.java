@@ -14,6 +14,7 @@ public class Main extends Application {
 
 		primaryStage.setTitle("Procedural Texture Generator");
 		primaryStage.setScene(new Scene(root, 800, 600));
+		primaryStage.setMaximized(true);
 		primaryStage.show();
 	}
 
