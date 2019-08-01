@@ -1,5 +1,6 @@
 package main.component;
 
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -54,26 +55,28 @@ public class Root implements ReactiveComponentParent {
 
 		final Menu fileMenu = new Menu("File", null, newTexture, newAnimation, new SeparatorMenuItem(), exit);
 
+		final BooleanBinding panesDisabledProperty = projectType.isEqualTo(ProjectType.NONE);
+
 		final TitledPane ptgNodeLibraryPane = new TitledPane("Library", ptgNodeLibrary.view());
 		ptgNodeLibraryPane.setCollapsible(false);
-		ptgNodeLibraryPane.disableProperty().bind(projectType.isEqualTo(ProjectType.NONE));
+		ptgNodeLibraryPane.disableProperty().bind(panesDisabledProperty);
 		ptgNodeLibraryPane.setPrefWidth(100);
 		ptgNodeLibraryPane.setMaxHeight(Double.MAX_VALUE);
 
 		final TitledPane workspacePane = new TitledPane("Workspace", workspace.view());
 		workspacePane.setCollapsible(false);
-		workspacePane.disableProperty().bind(projectType.isEqualTo(ProjectType.NONE));
+		workspacePane.disableProperty().bind(panesDisabledProperty);
 		workspacePane.setMaxHeight(Double.MAX_VALUE);
 
 		final TitledPane previewPane = new TitledPane("Preview", preview.view());
 		previewPane.setCollapsible(false);
-		previewPane.disableProperty().bind(projectType.isEqualTo(ProjectType.NONE));
+		previewPane.disableProperty().bind(panesDisabledProperty);
 		previewPane.setPrefWidth(150);
 		previewPane.setMaxHeight(Double.MAX_VALUE);
 
 		final TitledPane inspectorPane = new TitledPane("Inspector", null);
 		inspectorPane.setCollapsible(false);
-		inspectorPane.disableProperty().bind(projectType.isEqualTo(ProjectType.NONE));
+		inspectorPane.disableProperty().bind(panesDisabledProperty);
 		inspectorPane.setPrefHeight(150);
 		inspectorPane.setMaxHeight(Double.MAX_VALUE);
 
@@ -128,16 +131,5 @@ public class Root implements ReactiveComponentParent {
 		state.put("workingWithTileableY", workingWithTileableY);
 		state.put("workingWithPeriodic", workingWithPeriodic);
 		return state;
-	}
-
-	// For testing
-	private void printState() {
-		System.out.println("projectType: " + projectType.get());
-		System.out.println("imageWidth: " + imageWidth.get());
-		System.out.println("imageHeight: " + imageHeight.get());
-		System.out.println("animationDuration: " + animationDuration.get());
-		System.out.println("workingWithTileableX: " + workingWithTileableX.get());
-		System.out.println("workingWithTileableY: " + workingWithTileableY.get());
-		System.out.println("workingWithPeriodic: " + workingWithPeriodic.get());
 	}
 }
