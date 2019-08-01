@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import main.view.LimitedIntegerTextField;
 
 import java.util.Map;
 
@@ -31,11 +32,8 @@ public class NewTextureRoot implements ReactiveComponentParent {
 		assert parentState.get("workingWithTileableY") instanceof BooleanProperty;
 
 		//----Init View----//
-		final TextField widthInput = new TextField();
-		widthInput.setText("256");
-
-		final TextField heightInput = new TextField();
-		heightInput.setText("256");
+		final LimitedIntegerTextField widthInput = new LimitedIntegerTextField(9, "256");
+		final LimitedIntegerTextField heightInput = new LimitedIntegerTextField(9, "256");
 
 		final CheckBox wrapX = new CheckBox();
 		wrapX.setSelected(true);
@@ -68,22 +66,43 @@ public class NewTextureRoot implements ReactiveComponentParent {
 		root.setPadding(new Insets(0, 10, 0, 10));
 
 		//----Init Controller----//
-		// TODO: Limit text input length
-		widthInput.textProperty().addListener((observable, oldValue, newValue) -> {
-			if(!newValue.matches("\\d*")) widthInput.setText(newValue.replaceAll("[^\\d]", ""));
-		});
-
-		heightInput.textProperty().addListener((observable, oldValue, newValue) -> {
-			if(!newValue.matches("\\d*")) heightInput.setText(newValue.replaceAll("[^\\d]", ""));
-		});
-
 		ok.setOnAction(event -> {
-			((ObjectProperty<ProjectType>) parentState.get("projectType")).set(ProjectType.TEXTURE);
-			((IntegerProperty) parentState.get("imageWidth")).set(Integer.parseInt(widthInput.getText()));
-			((IntegerProperty) parentState.get("imageHeight")).set(Integer.parseInt(heightInput.getText()));
-			((BooleanProperty) parentState.get("workingWithTileableX")).set(wrapX.isSelected());
-			((BooleanProperty) parentState.get("workingWithTileableY")).set(wrapY.isSelected());
-			stage.close();
+			int width = -1, height = -1;
+			boolean improperInput = false;
+
+			try {
+				width = Integer.parseInt(widthInput.getText());
+				if(width == 0) {
+					widthInput.setText("");
+					widthInput.setPromptText("Must be at least 1");
+					improperInput = true;
+				}
+			} catch(NumberFormatException e) {
+				widthInput.setPromptText("Required field");
+				improperInput = true;
+			}
+
+			try {
+				height = Integer.parseInt(heightInput.getText());
+				if(height == 0) {
+					heightInput.setText("");
+					heightInput.setPromptText("Must be at least 1");
+					improperInput = true;
+				}
+			} catch(NumberFormatException e) {
+				heightInput.setPromptText("Required field");
+				improperInput = true;
+			}
+
+			if(!improperInput) {
+				assert !(width == -1 || height == -1);
+				((ObjectProperty<ProjectType>) parentState.get("projectType")).set(ProjectType.TEXTURE);
+				((IntegerProperty) parentState.get("imageWidth")).set(width);
+				((IntegerProperty) parentState.get("imageHeight")).set(height);
+				((BooleanProperty) parentState.get("workingWithTileableX")).set(wrapX.isSelected());
+				((BooleanProperty) parentState.get("workingWithTileableY")).set(wrapY.isSelected());
+				stage.close();
+			}
 		});
 
 		cancel.setOnAction(event -> stage.close());
