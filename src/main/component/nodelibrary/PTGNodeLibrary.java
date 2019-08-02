@@ -27,33 +27,7 @@ public class PTGNodeLibrary implements ReactiveComponentParent {
 		this.parent = parent;
 
 		//----Init View----//
-		final Insets libraryPadding = new Insets(10, 10, 10, 10);
-
-		final VBox noiseLibrary = new VBox(Arrays.stream(noiseLibrary()).map(LibraryItem::view).toArray(Node[]::new));
-		noiseLibrary.setPadding(libraryPadding);
-		noiseLibrary.setSpacing(10);
-
-		final VBox patternLibrary = new VBox(Arrays.stream(patternLibrary()).map(LibraryItem::view).toArray(Node[]::new));
-		patternLibrary.setPadding(libraryPadding);
-		patternLibrary.setSpacing(10);
-
-		final VBox operatorLibrary = new VBox(Arrays.stream(operatorLibrary()).map(LibraryItem::view).toArray(Node[]::new));
-		operatorLibrary.setPadding(libraryPadding);
-		operatorLibrary.setSpacing(10);
-
-		final ScrollPane noise = new ScrollPane(noiseLibrary);
-		noise.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		noise.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-
-		final ScrollPane patterns = new ScrollPane(patternLibrary);
-		patterns.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		patterns.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-
-		final ScrollPane operators = new ScrollPane(operatorLibrary);
-		operators.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-		operators.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-
-		accordion = new Accordion(new TitledPane("Noise", noise), new TitledPane("Patterns", patterns), new TitledPane("Operators", operators));
+		accordion = new Accordion(noiseFolder(), patternFolder(), operatorFolder());
 
 		//----Init Controller----//
 	}
@@ -68,8 +42,8 @@ public class PTGNodeLibrary implements ReactiveComponentParent {
 		return parent.state();
 	}
 
-	private LibraryItem[] noiseLibrary() {
-		return new LibraryItem[] {
+	private TitledPane noiseFolder() {
+		return accordionFolder("Noise", new LibraryItem[] {
 				new LibraryItem(this, "Perlin Noise", "resources/perlin_noise.png") {
 					protected ObservableValue<? extends Boolean> showForProjectType(ObjectProperty<ProjectType> projectType) {
 						return projectType.isEqualTo(ProjectType.TEXTURE).or(projectType.isEqualTo(ProjectType.ANIMATION));
@@ -80,14 +54,26 @@ public class PTGNodeLibrary implements ReactiveComponentParent {
 						return projectType.isEqualTo(ProjectType.TEXTURE).or(projectType.isEqualTo(ProjectType.ANIMATION));
 					}
 				}
-		};
+		});
 	}
 
-	private LibraryItem[] patternLibrary() {
-		return new LibraryItem[] {};
+	private TitledPane patternFolder() {
+		return accordionFolder("Patterns", new LibraryItem[] {});
 	}
 
-	private LibraryItem[] operatorLibrary() {
-		return new LibraryItem[] {};
+	private TitledPane operatorFolder() {
+		return accordionFolder("Operators", new LibraryItem[] {});
+	}
+
+	private TitledPane accordionFolder(String name, LibraryItem[] libraryItems) {
+		final VBox vbox = new VBox(Arrays.stream(libraryItems).map(LibraryItem::view).toArray(Node[]::new));
+		vbox.setPadding(new Insets(10));
+		vbox.setSpacing(10);
+
+		final ScrollPane scrollPane = new ScrollPane(vbox);
+		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+
+		return new TitledPane(name, scrollPane);
 	}
 }

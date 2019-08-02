@@ -1,6 +1,5 @@
 package main.component;
 
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.Property;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -55,30 +54,14 @@ public class Root implements ReactiveComponentParent {
 
 		final Menu fileMenu = new Menu("File", null, newTexture, newAnimation, new SeparatorMenuItem(), exit);
 
-		final BooleanBinding panesDisabledProperty = projectType.isEqualTo(ProjectType.NONE);
+		final TitledPane ptgNodeLibraryPane = createMainPane("Library", ptgNodeLibrary);
+		final TitledPane workspacePane = createMainPane("Workspace", workspace);
+		final TitledPane previewPane = createMainPane("Preview", preview);
+		final TitledPane inspectorPane = createMainPane("Inspector", ReactiveComponent.NULL);
 
-		final TitledPane ptgNodeLibraryPane = new TitledPane("Library", ptgNodeLibrary.view());
-		ptgNodeLibraryPane.setCollapsible(false);
-		ptgNodeLibraryPane.disableProperty().bind(panesDisabledProperty);
 		ptgNodeLibraryPane.setPrefWidth(100);
-		ptgNodeLibraryPane.setMaxHeight(Double.MAX_VALUE);
-
-		final TitledPane workspacePane = new TitledPane("Workspace", workspace.view());
-		workspacePane.setCollapsible(false);
-		workspacePane.disableProperty().bind(panesDisabledProperty);
-		workspacePane.setMaxHeight(Double.MAX_VALUE);
-
-		final TitledPane previewPane = new TitledPane("Preview", preview.view());
-		previewPane.setCollapsible(false);
-		previewPane.disableProperty().bind(panesDisabledProperty);
 		previewPane.setPrefWidth(150);
-		previewPane.setMaxHeight(Double.MAX_VALUE);
-
-		final TitledPane inspectorPane = new TitledPane("Inspector", null);
-		inspectorPane.setCollapsible(false);
-		inspectorPane.disableProperty().bind(panesDisabledProperty);
 		inspectorPane.setPrefHeight(150);
-		inspectorPane.setMaxHeight(Double.MAX_VALUE);
 
 		final SplitPane workspaceAndInspector = new SplitPane(workspacePane, inspectorPane);
 		workspaceAndInspector.setOrientation(Orientation.VERTICAL);
@@ -131,5 +114,13 @@ public class Root implements ReactiveComponentParent {
 		state.put("workingWithTileableY", workingWithTileableY);
 		state.put("workingWithPeriodic", workingWithPeriodic);
 		return state;
+	}
+
+	private TitledPane createMainPane(String name, ReactiveComponent reactiveComponent) {
+		final TitledPane pane = new TitledPane(name, reactiveComponent.view());
+		pane.setCollapsible(false);
+		pane.disableProperty().bind(projectType.isEqualTo(ProjectType.NONE));
+		pane.setMaxHeight(Double.MAX_VALUE);
+		return pane;
 	}
 }
