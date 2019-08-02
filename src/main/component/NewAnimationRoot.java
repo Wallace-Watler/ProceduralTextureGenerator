@@ -19,12 +19,12 @@ import java.util.Map;
 
 public class NewAnimationRoot implements ReactiveComponentParent {
 
-	private final ReactiveComponentParent parent;
+	private final ReactiveComponent parent;
 
 	@FXML
 	private VBox root;
 
-	public NewAnimationRoot(ReactiveComponentParent parent, Stage stage) {
+	public NewAnimationRoot(ReactiveComponent parent, Stage stage) {
 		//----Init Model----//
 		this.parent = parent;
 		final Map<String, Property> parentState = parent.state();

@@ -14,7 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import main.component.nodelibrary.PTGNodeLibrary;
-import main.component.preview.Preview;
+import main.component.preview.PreviewWindow;
 import main.component.workspace.Workspace;
 
 import java.util.HashMap;
@@ -45,7 +45,7 @@ public class Root implements ReactiveComponentParent {
 
 		PTGNodeLibrary ptgNodeLibrary = new PTGNodeLibrary(this);
 		Workspace workspace = new Workspace(this);
-		Preview preview = new Preview(this);
+		PreviewWindow previewWindow = new PreviewWindow(this);
 
 		//----Init View----//
 		final MenuItem newTexture = new MenuItem("New Texture...");
@@ -56,7 +56,7 @@ public class Root implements ReactiveComponentParent {
 
 		final TitledPane ptgNodeLibraryPane = createMainPane("Library", ptgNodeLibrary);
 		final TitledPane workspacePane = createMainPane("Workspace", workspace);
-		final TitledPane previewPane = createMainPane("Preview", preview);
+		final TitledPane previewPane = createMainPane("Preview", previewWindow);
 		final TitledPane inspectorPane = createMainPane("Inspector", ReactiveComponent.NULL);
 
 		ptgNodeLibraryPane.setPrefWidth(100);

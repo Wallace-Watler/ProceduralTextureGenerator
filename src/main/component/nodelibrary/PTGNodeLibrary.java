@@ -10,6 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import main.component.ProjectType;
+import main.component.ReactiveComponent;
 import main.component.ReactiveComponentParent;
 
 import java.util.Arrays;
@@ -17,12 +18,12 @@ import java.util.Map;
 
 public class PTGNodeLibrary implements ReactiveComponentParent {
 
-	private final ReactiveComponentParent parent;
+	private final ReactiveComponent parent;
 
 	@FXML
 	private final Accordion accordion;
 
-	public PTGNodeLibrary(ReactiveComponentParent parent) {
+	public PTGNodeLibrary(ReactiveComponent parent) {
 		//----Init Model----//
 		this.parent = parent;
 

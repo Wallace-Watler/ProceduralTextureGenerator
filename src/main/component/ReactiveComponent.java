@@ -6,6 +6,10 @@ import javafx.scene.Node;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * An individual piece of the program with a self-contained model (state), view, and controller.
+ * Should be able to inherit state from its parent, another {@code ReactiveComponent}.
+ */
 public interface ReactiveComponent {
 
 	ReactiveComponent NULL = new ReactiveComponent() {

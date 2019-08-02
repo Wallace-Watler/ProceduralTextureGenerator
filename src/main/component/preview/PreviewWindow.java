@@ -4,18 +4,19 @@ import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
+import main.component.ReactiveComponent;
 import main.component.ReactiveComponentParent;
 
 import java.util.Map;
 
-public class Preview implements ReactiveComponentParent {
+public class PreviewWindow implements ReactiveComponentParent {
 
-	private final ReactiveComponentParent parent;
+	private final ReactiveComponent parent;
 
 	@FXML
 	private ScrollPane scrollPane;
 
-	public Preview(ReactiveComponentParent parent) {
+	public PreviewWindow(ReactiveComponent parent) {
 		//----Init Model----//
 		this.parent = parent;
 

@@ -4,18 +4,19 @@ import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.layout.StackPane;
+import main.component.ReactiveComponent;
 import main.component.ReactiveComponentParent;
 
 import java.util.Map;
 
 public class Workspace implements ReactiveComponentParent {
 
-	private final ReactiveComponentParent parent;
+	private final ReactiveComponent parent;
 
 	@FXML
 	private StackPane stackPane;
 
-	public Workspace(ReactiveComponentParent parent) {
+	public Workspace(ReactiveComponent parent) {
 		//----Init Model----//
 		this.parent = parent;
 

@@ -16,12 +16,12 @@ import java.util.Map;
 
 public class NewTextureRoot implements ReactiveComponentParent {
 
-	private final ReactiveComponentParent parent;
+	private final ReactiveComponent parent;
 
 	@FXML
 	private VBox root;
 
-	public NewTextureRoot(ReactiveComponentParent parent, Stage stage) {
+	public NewTextureRoot(ReactiveComponent parent, Stage stage) {
 		//----Init Model----//
 		this.parent = parent;
 		final Map<String, Property> parentState = parent.state();
