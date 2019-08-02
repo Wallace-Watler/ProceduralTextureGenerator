@@ -19,7 +19,7 @@ public class NewTextureRoot implements ReactiveComponentParent {
 	private final ReactiveComponent parent;
 
 	@FXML
-	private VBox root;
+	private final VBox root;
 
 	public NewTextureRoot(ReactiveComponent parent, Stage stage) {
 		//----Init Model----//

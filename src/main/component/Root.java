@@ -31,7 +31,7 @@ public class Root implements ReactiveComponentParent {
 	private final SimpleBooleanProperty workingWithPeriodic;
 
 	@FXML
-	private VBox root;
+	private final VBox root;
 
 	public Root(Stage stage) {
 		//----Init Model----//
@@ -43,9 +43,9 @@ public class Root implements ReactiveComponentParent {
 		workingWithTileableY = new SimpleBooleanProperty(false);
 		workingWithPeriodic = new SimpleBooleanProperty(false);
 
-		PTGNodeLibrary ptgNodeLibrary = new PTGNodeLibrary(this);
-		Workspace workspace = new Workspace(this);
-		PreviewWindow previewWindow = new PreviewWindow(this);
+		final PTGNodeLibrary ptgNodeLibrary = new PTGNodeLibrary(this);
+		final Workspace workspace = new Workspace(this);
+		final PreviewWindow previewWindow = new PreviewWindow(this);
 
 		//----Init View----//
 		final MenuItem newTexture = new MenuItem("New Texture...");

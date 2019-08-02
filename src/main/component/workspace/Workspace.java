@@ -14,7 +14,7 @@ public class Workspace implements ReactiveComponentParent {
 	private final ReactiveComponent parent;
 
 	@FXML
-	private StackPane stackPane;
+	private final StackPane stackPane;
 
 	public Workspace(ReactiveComponent parent) {
 		//----Init Model----//

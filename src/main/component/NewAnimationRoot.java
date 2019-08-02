@@ -22,7 +22,7 @@ public class NewAnimationRoot implements ReactiveComponentParent {
 	private final ReactiveComponent parent;
 
 	@FXML
-	private VBox root;
+	private final VBox root;
 
 	public NewAnimationRoot(ReactiveComponent parent, Stage stage) {
 		//----Init Model----//
