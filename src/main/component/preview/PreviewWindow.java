@@ -17,7 +17,6 @@ import java.util.Map;
 public class PreviewWindow implements ReactiveComponentParent {
 
 	private final ReactiveComponent parent;
-
 	private final SimpleIntegerProperty currentFrame;
 
 	@FXML
