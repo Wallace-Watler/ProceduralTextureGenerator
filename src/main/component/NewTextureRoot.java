@@ -10,7 +10,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import main.view.LimitedIntegerTextField;
+import main.customfx.LimitedIntegerTextField;
 
 import java.util.Map;
 

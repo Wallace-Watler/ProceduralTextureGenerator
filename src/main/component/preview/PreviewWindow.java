@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import main.component.ReactiveComponent;
 import main.component.ReactiveComponentParent;
@@ -20,7 +20,7 @@ public class PreviewWindow implements ReactiveComponentParent {
 	private final SimpleIntegerProperty currentFrame;
 
 	@FXML
-	private final ScrollPane scrollPane;
+	private final VBox vbox;
 
 	public PreviewWindow(ReactiveComponent parent) {
 		//----Init Model----//
@@ -31,20 +31,17 @@ public class PreviewWindow implements ReactiveComponentParent {
 		final AnimationControls animationControls = new AnimationControls(this);
 
 		//----Init View----//
-		final Separator separator = new Separator();
-		separator.setPadding(new Insets(4, 0, 4, 0));
-
-		final VBox vbox = new VBox(preview.view(), animationControls.view(), separator);
-		vbox.setPadding(new Insets(10));
-
-		scrollPane = new ScrollPane(vbox);
-		scrollPane.setFitToWidth(true);
+		final ScrollPane scrollPane = new ScrollPane();
 		scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+		VBox.setVgrow(scrollPane, Priority.ALWAYS);
+
+		vbox = new VBox(preview.view(), animationControls.view(), scrollPane);
+		vbox.setPadding(new Insets(-1, -1, -1, -1));
 	}
 
 	@Override
 	public Parent parentView() {
-		return scrollPane;
+		return vbox;
 	}
 
 	@Override

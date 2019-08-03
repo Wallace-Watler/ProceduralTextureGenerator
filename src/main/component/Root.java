@@ -5,6 +5,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -67,6 +68,7 @@ public class Root implements ReactiveComponentParent {
 		final SplitPane workspaceAndInspector = new SplitPane(workspacePane, inspectorPane);
 		workspaceAndInspector.setOrientation(Orientation.VERTICAL);
 		workspaceAndInspector.setDividerPositions(0.8);
+		workspaceAndInspector.setPadding(Insets.EMPTY);
 
 		root = new BorderPane(workspaceAndInspector, new MenuBar(fileMenu), previewPane, null, ptgNodeLibraryPane);
 

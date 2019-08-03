@@ -13,7 +13,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import main.view.LimitedIntegerTextField;
+import main.customfx.LimitedIntegerTextField;
 
 import java.util.Map;
 
