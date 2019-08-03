@@ -10,6 +10,8 @@ import java.util.Map;
 
 public class Preview implements ReactiveComponent {
 
+	public static final int IMAGE_WIDTH = 256;
+
 	private final ReactiveComponent parent;
 
 	@FXML
@@ -21,8 +23,8 @@ public class Preview implements ReactiveComponent {
 
 		//----Init View----//
 		imageView = new ImageView();
-		imageView.setFitWidth(256);
-		imageView.setFitHeight(256);
+		imageView.setFitWidth(IMAGE_WIDTH);
+		imageView.setFitHeight(IMAGE_WIDTH);
 	}
 
 	@Override

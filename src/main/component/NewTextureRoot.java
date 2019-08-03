@@ -95,7 +95,6 @@ public class NewTextureRoot implements ReactiveComponentParent {
 			}
 
 			if(!improperInput) {
-				assert !(width == -1 || height == -1);
 				((ObjectProperty<ProjectType>) parentState.get("projectType")).set(ProjectType.TEXTURE);
 				((IntegerProperty) parentState.get("imageWidth")).set(width);
 				((IntegerProperty) parentState.get("imageHeight")).set(height);

@@ -9,11 +9,12 @@ import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import main.component.nodelibrary.LibraryItem;
 import main.component.nodelibrary.PTGNodeLibrary;
+import main.component.preview.Preview;
 import main.component.preview.PreviewWindow;
 import main.component.workspace.Workspace;
 
@@ -31,7 +32,7 @@ public class Root implements ReactiveComponentParent {
 	private final SimpleBooleanProperty workingWithPeriodic;
 
 	@FXML
-	private final VBox root;
+	private final BorderPane root;
 
 	public Root(Stage stage) {
 		//----Init Model----//
@@ -59,20 +60,15 @@ public class Root implements ReactiveComponentParent {
 		final TitledPane previewPane = createMainPane("Preview", previewWindow);
 		final TitledPane inspectorPane = createMainPane("Inspector", ReactiveComponent.NULL);
 
-		ptgNodeLibraryPane.setPrefWidth(100);
-		previewPane.setPrefWidth(150);
+		ptgNodeLibraryPane.setPrefWidth(LibraryItem.IMAGE_WIDTH + 38);
+		previewPane.setPrefWidth(Preview.IMAGE_WIDTH + 24);
 		inspectorPane.setPrefHeight(150);
 
 		final SplitPane workspaceAndInspector = new SplitPane(workspacePane, inspectorPane);
 		workspaceAndInspector.setOrientation(Orientation.VERTICAL);
 		workspaceAndInspector.setDividerPositions(0.8);
 
-		final SplitPane workspaceInspectorLibraryPreview = new SplitPane(ptgNodeLibraryPane, workspaceAndInspector, previewPane);
-		workspaceInspectorLibraryPreview.setOrientation(Orientation.HORIZONTAL);
-		workspaceInspectorLibraryPreview.setDividerPositions(0.1, 0.85);
-		VBox.setVgrow(workspaceInspectorLibraryPreview, Priority.ALWAYS);
-
-		root = new VBox(new MenuBar(fileMenu), workspaceInspectorLibraryPreview);
+		root = new BorderPane(workspaceAndInspector, new MenuBar(fileMenu), previewPane, null, ptgNodeLibraryPane);
 
 		//----Init Controller----//
 		newTexture.setOnAction(event -> {

@@ -119,7 +119,6 @@ public class NewAnimationRoot implements ReactiveComponentParent {
 			}
 
 			if(!improperInput) {
-				assert !(width == -1 || height == -1 || duration == -1);
 				((ObjectProperty<ProjectType>) parentState.get("projectType")).set(ProjectType.ANIMATION);
 				((IntegerProperty) parentState.get("imageWidth")).set(Integer.parseInt(widthInput.getText()));
 				((IntegerProperty) parentState.get("imageHeight")).set(Integer.parseInt(heightInput.getText()));

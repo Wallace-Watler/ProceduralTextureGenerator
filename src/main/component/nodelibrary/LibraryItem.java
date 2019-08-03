@@ -17,6 +17,8 @@ import java.util.Map;
 
 public abstract class LibraryItem implements ReactiveComponentParent {
 
+	public static final int IMAGE_WIDTH = 100;
+
 	private final ReactiveComponent parent;
 
 	@FXML
@@ -28,12 +30,14 @@ public abstract class LibraryItem implements ReactiveComponentParent {
 		final Map<String, Property> parentState = parent.state();
 		assert parentState.get("projectType").getValue() instanceof ProjectType;
 
+		final ObjectProperty<ProjectType> projectType = (ObjectProperty<ProjectType>) parentState.get("projectType");
+
 		//----Init View----//
 		vbox = new VBox(new ImageView(imageUrl), new Label(name));
 		vbox.setAlignment(Pos.CENTER);
 
 		//----Init Controller----//
-		vbox.visibleProperty().bind(showForProjectType(((ObjectProperty<ProjectType>) parentState.get("projectType"))));
+		vbox.visibleProperty().bind(showForProjectType(projectType));
 		vbox.managedProperty().bind(vbox.visibleProperty());
 	}
 

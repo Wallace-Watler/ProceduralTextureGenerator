@@ -29,8 +29,6 @@ public class PTGNodeLibrary implements ReactiveComponentParent {
 
 		//----Init View----//
 		accordion = new Accordion(noiseFolder(), patternFolder(), operatorFolder());
-
-		//----Init Controller----//
 	}
 
 	@Override

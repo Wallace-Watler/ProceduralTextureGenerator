@@ -39,6 +39,11 @@ public class AnimationControls implements ReactiveComponentParent {
 		assert parentState.get("animationDuration") instanceof IntegerProperty;
 		assert parentState.get("currentFrame") instanceof IntegerProperty;
 
+		final ObjectProperty<ProjectType> projectType = (ObjectProperty<ProjectType>) parentState.get("projectType");
+		final BooleanProperty workingWithPeriodic = (BooleanProperty) parentState.get("workingWithPeriodic");
+		final IntegerProperty animationDuration = (IntegerProperty) parentState.get("animationDuration");
+		final IntegerProperty currentFrame = (IntegerProperty) parentState.get("currentFrame");
+
 		playingAnimation = new SimpleBooleanProperty(false);
 
 		//----Init View----//
@@ -61,6 +66,19 @@ public class AnimationControls implements ReactiveComponentParent {
 		vbox = new VBox(controls, frameLabel);
 		vbox.setAlignment(Pos.CENTER);
 
+		final Runnable incrementSliderWithLoop = () -> {
+			if(frameSlider.getValue() == frameSlider.getMax()) {
+				if(workingWithPeriodic.get()) frameSlider.setValue(0);
+				else playingAnimation.set(false);
+			} else frameSlider.increment();
+		};
+
+		final Runnable decrementSliderWithLoop = () -> {
+			if(frameSlider.getValue() == 0) {
+				if(workingWithPeriodic.get()) frameSlider.setValue(frameSlider.getMax());
+			} else frameSlider.decrement();
+		};
+
 		animationTimer = new AnimationTimer() {
 			private long lastTime = System.nanoTime();
 
@@ -76,16 +94,9 @@ public class AnimationControls implements ReactiveComponentParent {
 				final double fps = 60;
 				long delta = now - lastTime;
 				if(delta / (1_000_000_000.0 / fps) >= 1) {
-					tick();
+					incrementSliderWithLoop.run();
 					lastTime = now;
 				}
-			}
-
-			private void tick() {
-				if(frameSlider.getValue() == frameSlider.getMax()) {
-					if(((BooleanProperty) parentState.get("workingWithPeriodic")).get()) frameSlider.setValue(0);
-					else playingAnimation.set(false);
-				} else frameSlider.increment();
 			}
 		};
 
@@ -96,11 +107,11 @@ public class AnimationControls implements ReactiveComponentParent {
 						.otherwise(new Image("resources/play.png"))
 		);
 
-		previousFrame.disableProperty().bind(frameSlider.valueProperty().isEqualTo(0).and(((BooleanProperty) parentState.get("workingWithPeriodic")).not()));
+		previousFrame.disableProperty().bind(frameSlider.valueProperty().isEqualTo(0).and(workingWithPeriodic.not()));
 		previousFrame.setOnAction(event -> {
 			animationTimer.stop();
 			playingAnimation.set(false);
-			decrementWithLoop(frameSlider, (BooleanProperty) parentState.get("workingWithPeriodic"));
+			decrementSliderWithLoop.run();
 		});
 
 		playPause.setOnAction(event -> {
@@ -108,40 +119,27 @@ public class AnimationControls implements ReactiveComponentParent {
 				playingAnimation.set(false);
 				animationTimer.stop();
 			} else {
-				if(frameSlider.getValue() == frameSlider.getMax() && !((BooleanProperty) parentState.get("workingWithPeriodic")).get())
-					frameSlider.setValue(0);
+				if(frameSlider.getValue() == frameSlider.getMax() && !workingWithPeriodic.get()) frameSlider.setValue(0);
 				playingAnimation.set(true);
 				animationTimer.start();
 			}
 		});
 
-		nextFrame.disableProperty().bind(frameSlider.valueProperty().isEqualTo(frameSlider.maxProperty()).and(((BooleanProperty) parentState.get("workingWithPeriodic")).not()));
+		nextFrame.disableProperty().bind(frameSlider.valueProperty().isEqualTo(frameSlider.maxProperty()).and(workingWithPeriodic.not()));
 		nextFrame.setOnAction(event -> {
 			animationTimer.stop();
 			playingAnimation.set(false);
-			incrementWithLoop(frameSlider, (BooleanProperty) parentState.get("workingWithPeriodic"));
+			incrementSliderWithLoop.run();
 		});
 
-		frameSlider.maxProperty().bind(((IntegerProperty) parentState.get("animationDuration")).add(-1));
+		frameSlider.maxProperty().bind(animationDuration.add(-1));
 		frameSlider.valueProperty().addListener((obs, oldval, newVal) -> frameSlider.setValue(newVal.intValue()));
-		frameSlider.valueProperty().bindBidirectional(parentState.get("currentFrame"));
+		frameSlider.valueProperty().bindBidirectional(currentFrame);
 
 		frameLabel.textProperty().bind(frameSlider.valueProperty().asString("Frame: %.0f"));
 
-		vbox.visibleProperty().bind(((ObjectProperty<ProjectType>) parentState.get("projectType")).isEqualTo(ProjectType.ANIMATION));
+		vbox.visibleProperty().bind(projectType.isEqualTo(ProjectType.ANIMATION));
 		vbox.managedProperty().bind(vbox.visibleProperty());
-	}
-
-	private static void incrementWithLoop(Slider slider, BooleanProperty periodic) {
-		if(slider.getValue() == slider.getMax()) {
-			if(periodic.get()) slider.setValue(0);
-		} else slider.increment();
-	}
-
-	private static void decrementWithLoop(Slider slider, BooleanProperty periodic) {
-		if(slider.getValue() == 0) {
-			if(periodic.get()) slider.setValue(slider.getMax());
-		} else slider.decrement();
 	}
 
 	@Override
