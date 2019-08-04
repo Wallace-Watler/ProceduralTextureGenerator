@@ -12,6 +12,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import main.component.ProjectType;
@@ -66,19 +67,6 @@ public class AnimationControls implements ReactiveComponentParent {
 		vbox = new VBox(controls, frameLabel);
 		vbox.setAlignment(Pos.CENTER);
 
-		final Runnable incrementSliderWithLoop = () -> {
-			if(frameSlider.getValue() == frameSlider.getMax()) {
-				if(workingWithPeriodic.get()) frameSlider.setValue(0);
-				else playingAnimation.set(false);
-			} else frameSlider.increment();
-		};
-
-		final Runnable decrementSliderWithLoop = () -> {
-			if(frameSlider.getValue() == 0) {
-				if(workingWithPeriodic.get()) frameSlider.setValue(frameSlider.getMax());
-			} else frameSlider.decrement();
-		};
-
 		animationTimer = new AnimationTimer() {
 			private long lastTime = System.nanoTime();
 
@@ -94,7 +82,13 @@ public class AnimationControls implements ReactiveComponentParent {
 				final double fps = 60;
 				long delta = now - lastTime;
 				if(delta / (1_000_000_000.0 / fps) >= 1) {
-					incrementSliderWithLoop.run();
+					if(frameSlider.getValue() == frameSlider.getMax()) {
+						if(workingWithPeriodic.get()) frameSlider.setValue(0);
+						else {
+							playingAnimation.set(false);
+							stop();
+						}
+					} else frameSlider.increment();
 					lastTime = now;
 				}
 			}
@@ -111,7 +105,8 @@ public class AnimationControls implements ReactiveComponentParent {
 		previousFrame.setOnAction(event -> {
 			animationTimer.stop();
 			playingAnimation.set(false);
-			decrementSliderWithLoop.run();
+			if(frameSlider.getValue() == 0) frameSlider.setValue(frameSlider.getMax());
+			else frameSlider.decrement();
 		});
 
 		playPause.setOnAction(event -> {
@@ -119,7 +114,7 @@ public class AnimationControls implements ReactiveComponentParent {
 				playingAnimation.set(false);
 				animationTimer.stop();
 			} else {
-				if(frameSlider.getValue() == frameSlider.getMax() && !workingWithPeriodic.get()) frameSlider.setValue(0);
+				if(frameSlider.getValue() == frameSlider.getMax()) frameSlider.setValue(0);
 				playingAnimation.set(true);
 				animationTimer.start();
 			}
@@ -129,9 +124,14 @@ public class AnimationControls implements ReactiveComponentParent {
 		nextFrame.setOnAction(event -> {
 			animationTimer.stop();
 			playingAnimation.set(false);
-			incrementSliderWithLoop.run();
+			if(frameSlider.getValue() == frameSlider.getMax()) frameSlider.setValue(0);
+			else frameSlider.increment();
 		});
 
+		frameSlider.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+			animationTimer.stop();
+			playingAnimation.set(false);
+		});
 		frameSlider.maxProperty().bind(animationDuration.add(-1));
 		frameSlider.valueProperty().addListener((obs, oldval, newVal) -> frameSlider.setValue(newVal.intValue()));
 		frameSlider.valueProperty().bindBidirectional(currentFrame);
