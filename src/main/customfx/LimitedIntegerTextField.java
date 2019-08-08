@@ -11,4 +11,8 @@ public class LimitedIntegerTextField extends TextField {
 			if(getText().length() > characterLimit) setText(getText().substring(0, characterLimit));
 		});
 	}
+
+	public int getTextAsInteger() {
+		return Integer.parseInt(getText().isEmpty() ? "0" : getText());
+	}
 }

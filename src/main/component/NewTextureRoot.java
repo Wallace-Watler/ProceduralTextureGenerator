@@ -67,30 +67,19 @@ public class NewTextureRoot implements ReactiveComponentParent {
 
 		//----Init Controller----//
 		ok.setOnAction(event -> {
-			int width = -1, height = -1;
 			boolean improperInput = false;
 
-			try {
-				width = Integer.parseInt(widthInput.getText());
-				if(width == 0) {
-					widthInput.setText("");
-					widthInput.setPromptText("Must be at least 1");
-					improperInput = true;
-				}
-			} catch(NumberFormatException e) {
-				widthInput.setPromptText("Required field");
+			int width = widthInput.getTextAsInteger();
+			if(width == 0) {
+				widthInput.setText("");
+				widthInput.setPromptText("Must be at least 1");
 				improperInput = true;
 			}
 
-			try {
-				height = Integer.parseInt(heightInput.getText());
-				if(height == 0) {
-					heightInput.setText("");
-					heightInput.setPromptText("Must be at least 1");
-					improperInput = true;
-				}
-			} catch(NumberFormatException e) {
-				heightInput.setPromptText("Required field");
+			int height = heightInput.getTextAsInteger();
+			if(height == 0) {
+				heightInput.setText("");
+				heightInput.setPromptText("Must be at least 1");
 				improperInput = true;
 			}
 

@@ -79,50 +79,34 @@ public class NewAnimationRoot implements ReactiveComponentParent {
 
 		//----Init Controller----//
 		ok.setOnAction(event -> {
-			int width = -1, height = -1, duration = -1;
 			boolean improperInput = false;
 
-			try {
-				width = Integer.parseInt(widthInput.getText());
-				if(width == 0) {
-					widthInput.setText("");
-					widthInput.setPromptText("Must be at least 1");
-					improperInput = true;
-				}
-			} catch(NumberFormatException e) {
-				widthInput.setPromptText("Required field");
+			int width = widthInput.getTextAsInteger();
+			if(width == 0) {
+				widthInput.setText("");
+				widthInput.setPromptText("Must be at least 1");
 				improperInput = true;
 			}
 
-			try {
-				height = Integer.parseInt(heightInput.getText());
-				if(height == 0) {
-					heightInput.setText("");
-					heightInput.setPromptText("Must be at least 1");
-					improperInput = true;
-				}
-			} catch(NumberFormatException e) {
-				heightInput.setPromptText("Required field");
+			int height = heightInput.getTextAsInteger();
+			if(height == 0) {
+				heightInput.setText("");
+				heightInput.setPromptText("Must be at least 1");
 				improperInput = true;
 			}
 
-			try {
-				duration = Integer.parseInt(durationInput.getText());
-				if(duration == 0) {
-					durationInput.setText("");
-					durationInput.setPromptText("Must be at least 1");
-					improperInput = true;
-				}
-			} catch(NumberFormatException e) {
-				durationInput.setPromptText("Required field");
+			int duration = durationInput.getTextAsInteger();
+			if(duration == 0) {
+				durationInput.setText("");
+				durationInput.setPromptText("Must be at least 1");
 				improperInput = true;
 			}
 
 			if(!improperInput) {
 				((ObjectProperty<ProjectType>) parentState.get("projectType")).set(ProjectType.ANIMATION);
-				((IntegerProperty) parentState.get("imageWidth")).set(Integer.parseInt(widthInput.getText()));
-				((IntegerProperty) parentState.get("imageHeight")).set(Integer.parseInt(heightInput.getText()));
-				((IntegerProperty) parentState.get("animationDuration")).set(Integer.parseInt(durationInput.getText()));
+				((IntegerProperty) parentState.get("imageWidth")).set(width);
+				((IntegerProperty) parentState.get("imageHeight")).set(height);
+				((IntegerProperty) parentState.get("animationDuration")).set(duration);
 				((BooleanProperty) parentState.get("workingWithTileableX")).set(wrapX.isSelected());
 				((BooleanProperty) parentState.get("workingWithTileableY")).set(wrapY.isSelected());
 				((BooleanProperty) parentState.get("workingWithPeriodic")).set(periodic.isSelected());

@@ -4,8 +4,10 @@ import javafx.animation.AnimationTimer;
 import javafx.beans.binding.When;
 import javafx.beans.property.*;
 import javafx.fxml.FXML;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.VPos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -13,11 +15,14 @@ import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.RowConstraints;
 import main.component.ProjectType;
 import main.component.ReactiveComponent;
 import main.component.ReactiveComponentParent;
+import main.customfx.LimitedDecimalTextField;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,7 +34,7 @@ public class AnimationControls implements ReactiveComponentParent {
 	private final SimpleBooleanProperty playingAnimation;
 
 	@FXML
-	private final VBox vbox;
+	private final GridPane gridPane;
 
 	public AnimationControls(ReactiveComponent parent) {
 		//----Init Model----//
@@ -58,17 +63,34 @@ public class AnimationControls implements ReactiveComponentParent {
 		frameSlider.setPadding(new Insets(0, 0, 0, 10));
 		frameSlider.setBlockIncrement(1);
 
-		final HBox controls = new HBox(previousFrame, playPause, nextFrame, frameSlider);
-		controls.setPadding(new Insets(10, 0, 0, 0));
-		controls.setAlignment(Pos.CENTER);
+		final LimitedDecimalTextField fpsInput = new LimitedDecimalTextField(3, 3, "20");
+		fpsInput.setPrefWidth(60);
 
 		final Label frameLabel = new Label();
 
-		vbox = new VBox(controls, frameLabel);
-		vbox.setAlignment(Pos.CENTER);
+		final HBox buttons = new HBox(previousFrame, playPause, nextFrame);
+		buttons.setAlignment(Pos.CENTER);
+
+		final HBox fps = new HBox(new Label("FPS: "), fpsInput);
+		fps.setAlignment(Pos.CENTER);
+
+		final ColumnConstraints columnConstraints = new ColumnConstraints();
+		final RowConstraints rowConstraints = new RowConstraints();
+		columnConstraints.setHalignment(HPos.CENTER);
+		rowConstraints.setValignment(VPos.CENTER);
+
+		gridPane = new GridPane();
+		gridPane.addRow(0, buttons, frameSlider);
+		gridPane.addRow(1, fps, frameLabel);
+		gridPane.setVgap(4);
+		gridPane.setPadding(new Insets(4));
+		gridPane.setAlignment(Pos.CENTER);
+		gridPane.getColumnConstraints().addAll(columnConstraints, columnConstraints);
+		gridPane.getRowConstraints().addAll(rowConstraints, rowConstraints);
 
 		animationTimer = new AnimationTimer() {
 			private long lastTime = System.nanoTime();
+			private long delta = 0;
 
 			@Override
 			public void start() {
@@ -78,19 +100,23 @@ public class AnimationControls implements ReactiveComponentParent {
 
 			@Override
 			public void handle(long now) {
-				// TODO: Look into why this seems to be slow
-				final double fps = 60;
-				long delta = now - lastTime;
-				if(delta / (1_000_000_000.0 / fps) >= 1) {
-					if(frameSlider.getValue() == frameSlider.getMax()) {
-						if(workingWithPeriodic.get()) frameSlider.setValue(0);
-						else {
-							playingAnimation.set(false);
-							stop();
-						}
-					} else frameSlider.increment();
-					lastTime = now;
+				delta += now - lastTime;
+				final double nanosecondsPerFrame = 1_000_000_000 / fpsInput.getTextAsDouble();
+				while(delta >= nanosecondsPerFrame) {
+					nextFrame();
+					delta -= nanosecondsPerFrame;
 				}
+				lastTime = now;
+			}
+
+			private void nextFrame() {
+				if(frameSlider.getValue() == frameSlider.getMax()) {
+					if(workingWithPeriodic.get()) frameSlider.setValue(0);
+					else {
+						playingAnimation.set(false);
+						stop();
+					}
+				} else frameSlider.increment();
 			}
 		};
 
@@ -138,13 +164,13 @@ public class AnimationControls implements ReactiveComponentParent {
 
 		frameLabel.textProperty().bind(frameSlider.valueProperty().asString("Frame: %.0f"));
 
-		vbox.visibleProperty().bind(projectType.isEqualTo(ProjectType.ANIMATION));
-		vbox.managedProperty().bind(vbox.visibleProperty());
+		gridPane.visibleProperty().bind(projectType.isEqualTo(ProjectType.ANIMATION));
+		gridPane.managedProperty().bind(gridPane.visibleProperty());
 	}
 
 	@Override
 	public Parent parentView() {
-		return vbox;
+		return gridPane;
 	}
 
 	@Override
