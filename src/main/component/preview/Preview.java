@@ -4,6 +4,7 @@ import javafx.beans.property.Property;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import main.component.ReactiveComponent;
 
 import java.util.Map;
@@ -22,9 +23,9 @@ public class Preview implements ReactiveComponent {
 		this.parent = parent;
 
 		//----Init View----//
-		imageView = new ImageView();
-		imageView.setFitWidth(IMAGE_WIDTH);
-		imageView.setFitHeight(IMAGE_WIDTH);
+		final WritableImage image = new WritableImage(IMAGE_WIDTH, IMAGE_WIDTH);
+
+		imageView = new ImageView(image);
 	}
 
 	@Override
